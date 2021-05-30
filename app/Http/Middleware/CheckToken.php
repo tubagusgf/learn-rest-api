@@ -17,7 +17,10 @@ class CheckToken
     public function handle(Request $request, Closure $next)
     {
         if (!$request->get('token')) {
-            abort(401);
+            return response()->json([
+                'status' => false,
+                'messages' => 'unauthorized',
+            ], 401);
         }
         return $next($request);
     }

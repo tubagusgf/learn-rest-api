@@ -17,7 +17,11 @@ class NoteController extends Controller
     public function index()
     {
         //
-        
+        $notes = Note::all();
+    
+        return response()->json([
+            'note' => $notes
+        ], 200);
     }
 
     /**
@@ -28,14 +32,6 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        $token = Token::where('token', $request->get('token'))->first();
-        if (!$token) {
-            return response()->json([
-                'status' => false,
-                'messages' => 'unauthorized user',
-            ], 401);
-        }
-
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required'
