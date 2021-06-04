@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\Token;
 use Illuminate\Http\Request;
 
 class CheckToken
@@ -16,7 +17,8 @@ class CheckToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->get('token')) {
+        $token = Token::where('token', $request->get('token'))->first();
+        if (!$token) {
             return response()->json([
                 'status' => false,
                 'messages' => 'unauthorized',
