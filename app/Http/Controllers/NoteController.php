@@ -64,6 +64,12 @@ class NoteController extends Controller
     public function show($id)
     {
         //
+        $note = Note::findOrFail($id);
+        return response()->json([
+            'status' => true,
+            'messages' => 'show note success',
+            'data' => $note
+        ], 200);
     }
 
     /**
@@ -76,6 +82,29 @@ class NoteController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $note = Note::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'messages' => 'invalid field',
+            ], 422);
+        }
+
+        $note->update([
+            'title' => $request->title,
+            'content' => $request->content
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'messages' => 'edit note success',
+        ], 200);
     }
 
     /**
@@ -87,5 +116,11 @@ class NoteController extends Controller
     public function destroy($id)
     {
         //
+        $note = Note::findOrFail($id);
+        $note->delete();
+        return response()->json([
+            'status' => true,
+            'messages' => 'delete note success',
+        ], 200);
     }
 }
